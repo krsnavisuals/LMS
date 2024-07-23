@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block body %}
+<div style="width: 90%; margin-left: auto; margin-right: auto">
+  {% if books|length == 0 %}
+    <h1 class="h1">No book Available</h1>
+  {% else %}
+  {% if heading %}
+    <h1>Username - {{session.name}}</h1>
+    <h1 class="h1">My Books</h1>
+  {% else %}
+    <h1 class="h1">Available Books</h1>
+  {% endif %}
+  <table class="table"  style="border: 2px solid lightgray; margin-top:15px;">
+    
+    <thead>
+      <tr>
+        <th scope="col" style="width: 10%">Book ID</th>
+        <th scope="col">Book Name</th>
+        <th scope="col" style="width: 15%">Author</th>
+        <th scope="col" style="width: 10%">Section</th>
+        <th scope="col" style="width: 10%">Date Issued</th>
+        <th scope="col" style="width: 10%">Return Date</th>
+        <th scope="col" style="width: 10%">Rented</th>
+        {% if session.name == "Admin" %}
+          <th scope="col" style="width: 10%">Edit</th>
+          <th scope="col" style="width: 10%">Delete</th>
+        {% else %}
+          <th scope="col" style="width: 10%">Rent</th>
+          <th scope="col" style="width: 10%">View</th>
+        {% endif %}
+      </tr>
+    </thead>
+    {% for book in books %}
+    <tbody>
+      <tr>
+        <th scope="row">{{book.id}}</th>
+        <td>{{book.name}}</td>
+        <td>{{book.author}}</td>
+        <td>{{book.section}}</td>
+        <td>{{book.date_issued}}</td>
+        <td>{{book.return_date}}</td>
+        {% if book.rented %}
+          <td> True </td>
+        {% else %}  
+          <td> False </td>
+        {% endif %}
+        {% if session.name == "Admin" %}
+          <td>
+            <a href="{{ url_for('edit_books', id=book.id) }}"><button class="btn btn-primary">Edit</button></a>
+          </td>
+          <td>
+            <a href="{{ url_for('delete_books', id=book.id) }}"><button class="btn btn-danger">Delete</button></a>
+          </td>
+        {% else %}
+          {% if book.rented %}
+            <td>
+              <a href="{{ url_for('return_books', id=book.id) }}"><button class="btn btn-danger">Return</button></a>
+            </td>
+          {% else %}
+            <td>
+              <a href="{{ url_for('rent_books', id=book.id) }}"><button class="btn btn-primary">Rent</button></a>
+            </td>  
+          {% endif %}
+          <td>
+            <a href="{{ url_for('view_books', id=book.id) }}"><button class="btn btn-success">View</button></a>
+          </td>
+        {% endif %}
+      </tr>
+    </tbody>
+    {% endfor %}
+  </table>
+  {% endif %}
+</div>
+
+{% endblock %}

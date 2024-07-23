@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<h1 class="h1">Book Details</h1>
+
+{%if rented %}
+    <a href="{{ url_for('return_books', id=book.id) }}"><button class="btn btn-danger">Return</button></a>
+{% else %}
+    <a href="{{ url_for('rent_books', id=book.id) }}"><button class="btn btn-primary">Rent</button></a>
+{% endif %}
+<div style="display: flex;">   
+    <div style="flex-grow: 1">
+        <div class="h3">Name </div> 
+        <h4>{{ book.name }}</h4>
+    </div>
+
+    <div style="flex-grow: 1">
+        <div class="h3">Author </div> 
+        <h4>{{ book.author }}</h4>
+    </div>
+
+    <div style="flex-grow: 1">
+        <div class="h3">Price </div> 
+        <h4>{{ book.price }}</h4>
+    </div>
+
+    <div style="flex-grow: 1">
+        <div class="h3">Section </div> 
+        <h4>{{ book.section }}</h4>
+    </div>
+</div>
+
+{% if rented %}
+    <div>    
+        <div class="h3">Description </div> 
+        <h4>{{ book.description }}</h4>
+    </div>
+
+    <div >
+        <div class="h3">Content </div> 
+        <h4>{{ book.content }}</h4>
+    </div>
+{% endif %}
+
+{% if session.name %}
+    <h1 class="h1">Add Review</h1>
+    <form style="width: 50%;" action="" method="post" novalidate>
+    {{ form.csrf_token }}
+    <div class="form-group">
+        {{ form.description.label }}
+        {{ form.description(class_="form-control", size=32) }}
+    </div>
+    {% if form.description.errors %}
+            {% for error in form.description.errors %}
+                <li class="alert alert-danger">{{ error }}</li>
+            {% endfor %}  
+    {% endif %}
+
+    {{ form.submit(class_="form-control") }}
+    </form>
+{% endif %}
+
+{% if reviews|length > 0 %}
+    <h1 class="h1">Reviews</h1>
+    <table class="table" style="border: 2px solid lightgray; margin-top:15px;">
+        <thead>
+        <tr>
+            <th scope="col" style="width: 15%">Username</th>
+            <th scope="col" style="width: 80%">Review</th>
+        </tr>
+        </thead>
+        
+        <tbody>
+        {% for review in reviews %}
+            <tr>
+                <th scope="row">{{review.username}}</th>
+                <td>{{review.description}}</td>
+            <tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+{% endblock %}

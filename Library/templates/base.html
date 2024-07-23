@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    {% if name %}
+        <name>{{name}}</name>
+    {% else %}
+        <name>Library Management</name>
+    {% endif%} 
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    
+</head>
+<body class="m-0 p-0">
+<nav class="navbar navbar-inverse justify-content-between">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/">Library</a>
+    </div>
+    <ul class="nav navbar-nav">
+        <li {% if page == 'home' %} class="active" {% else %} {% endif %}><a href="/">Home</a></li>
+        <li {% if page == 'books' %} class="active" {% else %} {% endif %}><a href="{{ url_for('books') }}">Books</a></li>
+        {% if search_form %}
+        <li>
+          <form action="" method="post" novalidate class="form-inline" style="margin-top: 8px;">  
+            {{ search_form.search(class="form-control mr-sm-2", type="search", placeholder="Search") }}
+            {{ search_form.submit(class="btn btn-outline-success my-2 my-sm-0") }}
+          </form>
+        </li>
+        {% endif %}  
+    </ul>
+
+
+    {% if session.name %}
+      <ul class="nav navbar-nav navbar-right">
+        {% if session.name == "Admin" %}
+        <li><a href="{{ url_for('add_books') }}">Add Book</a></li>
+        <li><a href="{{ url_for('add_section') }}">Add Section</a></li>
+        {% endif %}
+        <li><a href="{{ url_for('books') }}"><span class="glyphicon glyphicon-user"></span>{{ session.name }}</a></li>
+        <li><a href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+      </ul>
+    {% else %}
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="{{ url_for('signup') }}"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+          <li><a href="{{ url_for('login') }}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+        </ul>
+    {% endif %}
+  </div>
+</nav>
+  
+<div class="container">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+          {% for category, message in messages %}
+              <div class="alert alert-{{category}}">
+                  {{ message }}
+              </div>
+          {% endfor %}
+      {% endif %}
+
+  {% endwith %}
+
+  {% block body %}
+  {% endblock %}
+</div>
+
+</body>
+</html>

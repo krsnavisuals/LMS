@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+{% if session.name == "Admin" %}
+    <h1 class="h1">Add Section</h1>
+    <form style="width: 50%;" action="" method="post" novalidate>
+    {{ form.csrf_token }}
+    <div class="form-group">
+        {{ form.name.label }}
+        {{ form.name(class_="form-control", size=32) }}
+    </div>
+    {% if form.name.errors %}
+            {% for error in form.name.errors %}
+                <li class="alert alert-danger">{{ error }}</li>
+            {% endfor %}  
+    {% endif %}
+
+    <div class="form-group">
+        {{ form.description.label }}
+        {{ form.description(class_="form-control", size=32) }}
+    </div>
+    {% if form.description.errors %}
+            {% for error in form.description.errors %}
+                <li class="alert alert-danger">{{ error }}</li>
+            {% endfor %}  
+    {% endif %}
+
+    {{ form.submit(class_="form-control") }}
+    </form>
+{% endif %}
+
+{% if sections|length > 0 %}
+    <h1 class="h1">Section</h1>
+    <table class="table" style="border: 2px solid lightgray; margin-top:15px;">
+        <thead>
+        <tr>
+            <th scope="col" style="width: 8%">Id</th>
+            <th scope="col" style="width: 20%">Name</th>
+            <th scope="col" style="width: 20%">Date</th>
+            <th scope="col" >Description</th>
+        </tr>
+        </thead>
+        
+        <tbody>
+        {% for section in sections %}
+            <tr>
+                <th scope="row">{{section.id}}</th>
+                <td>{{section.name}}</td>
+                <td>{{section.date}}</td>
+                <td>{{section.description}}</td>
+            <tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+{% endblock %}
